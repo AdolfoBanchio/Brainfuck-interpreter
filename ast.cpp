@@ -68,12 +68,66 @@ void AST::execute(State& state) {
     }
 }
 
-Program::Program(AST&& ast) : program(std::move(ast)) {
+Program::Program(AST&& ast) : ast(std::move(ast)) {
     // Initialize the program state
     state = State();
 }
 
 void Program::run() {
     // Execute the AST with the current state
-    program.execute(state);
+    ast.execute(state);
+}
+
+
+std::vector<std::unique_ptr<Expr>> parseLoopBody(const std::string& code, size_t& pos) {
+    std::vector<std::unique_ptr<Expr>> result;
+
+    while (pos < code.length()) {
+        char c = code[pos++]; // increment here, only once
+
+        switch (c) {
+            case '>': result.push_back(std::make_unique<MoveRight>()); break;
+            case '<': result.push_back(std::make_unique<MoveLeft>()); break;
+            case '+': result.push_back(std::make_unique<Increment>()); break;
+            case '-': result.push_back(std::make_unique<Decrement>()); break;
+            case '.': result.push_back(std::make_unique<Output>()); break;
+            case ',': result.push_back(std::make_unique<Input>()); break;
+            case '[': {
+                auto body = parseLoopBody(code, pos);
+                result.push_back(std::make_unique<Loop>(std::move(body)));
+                break;
+            }
+            case ']':
+                return result;  // we return to the caller when loop ends
+        }
+    }
+
+    throw std::runtime_error("Syntax error: Unmatched opening bracket");
+}
+
+AST parse(const std::string& code) {
+    AST ast;
+    size_t pos = 0;
+
+    while (pos < code.length()) {
+        char c = code[pos++]; // increment once at the top
+
+        switch (c) {
+            case '>': ast.addExpr(std::make_unique<MoveRight>()); break;
+            case '<': ast.addExpr(std::make_unique<MoveLeft>()); break;
+            case '+': ast.addExpr(std::make_unique<Increment>()); break;
+            case '-': ast.addExpr(std::make_unique<Decrement>()); break;
+            case '.': ast.addExpr(std::make_unique<Output>()); break;
+            case ',': ast.addExpr(std::make_unique<Input>()); break;
+            case '[': {
+                auto body = parseLoopBody(code, pos);
+                ast.addExpr(std::make_unique<Loop>(std::move(body)));
+                break;
+            }
+            case ']':
+                throw std::runtime_error("Syntax error: Unmatched closing bracket");
+        }
+    }
+
+    return ast;
 }

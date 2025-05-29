@@ -73,14 +73,15 @@ class AST {
         void execute(State& state);
 };
 
-
 class Program {
     public:
-        AST program;
+        AST ast;
         State state;
         explicit Program(AST&& ast);
         void run();
 };
 
+AST parse(const std::string& code);
+std::vector<std::unique_ptr<Expr>> parseLoopBody(const std::string& code, size_t& pos);
 #endif // AST_H
 
