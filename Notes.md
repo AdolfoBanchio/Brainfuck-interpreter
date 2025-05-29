@@ -36,3 +36,7 @@ This means I must have a data type that allows me to represent each of the diffe
 ## Design desitions
 
 cells = 30000
+
+If the pointer goes out of bounds the program will terminate with an error.
+
+The initial state of the data pointer is 0, and the initial state of each cell is 0.
