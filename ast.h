@@ -13,10 +13,15 @@ class AST;
 
 // State struct to hold the program's state
 struct State {
-    std::vector<int> memory;
+    int memory[MAX_MEMORY];
     size_t pointer;
 
-    State() : memory(MAX_MEMORY, 0), pointer(0) {}
+    State() : pointer(0) {
+        // Initialize all memory cells to 0
+        for (int i = 0; i < MAX_MEMORY; i++) {
+            memory[i] = 0;
+        }
+    }
 };
 
 // Class declarations

@@ -39,8 +39,8 @@ void Decrement::execute(State& state) {
 }
 
 void Output::execute(State& state) {
-    // Output the current memory cell (for simplicity, just print it)
-    std::cout << static_cast<int>(state.memory[state.pointer]) << std::endl;
+    // Output the current memory cell as a character
+    std::cout << static_cast<char>(state.memory[state.pointer]);
 }
 
 void Input::execute(State& state) {
