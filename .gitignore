@@ -1,3 +1,4 @@
 .vscode
 Notes.md
-out
+*.o
+brainfuck
