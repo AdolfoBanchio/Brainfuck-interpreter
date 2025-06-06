@@ -24,21 +24,21 @@ int main(int argc, char* argv[]) {
                        std::istreambuf_iterator<char>());
     file.close();
 
-    std::cout << "Source code:" << std::endl << source << std::endl;
+    //std::cout << "Source code:" << std::endl << source << std::endl;
     
     AST ast;
     try {
         ast = parse(source);
         
         // Print the AST for debugging purposes
-        std::cout << "AST created with " << ast.exprs.size() << " expressions." << std::endl;
+        //std::cout << "AST created with " << ast.exprs.size() << " expressions." << std::endl;
 
         // create a program with the AST
         Program program(std::move(ast));
         // run the program
         program.run();
         
-        std::cout << "Program executed successfully." << std::endl;
+        //std::cout << "Program executed successfully." << std::endl;
     } catch (const std::out_of_range& e) {
         std::cerr << "Error: " << e.what() << std::endl;
         return 1;

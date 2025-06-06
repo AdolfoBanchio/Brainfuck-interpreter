@@ -1,0 +1,37 @@
+# Brainfuck Test Cases and Expected Outputs
+extracted from https://brainfuck.org/tests.b
+
+1. io_test.b
+Description: Tests input/output handling with newline and EOF
+Expected Output: Two identical lines of two uppercase letters
+Expected Behavior: Should handle newline input correctly and EOF appropriately
+
+2. array_size_test.b
+Description: Tests if the implementation can handle the full 30000 cells
+Expected Output: #
+Expected Behavior: Should output a single '#' character if it can reach cell 30000
+
+3. left_bounds_test.b
+Description: Tests left array bounds checking
+Expected Output: (empty)
+Expected Behavior: Should output nothing if bounds checking is working correctly
+
+4. right_bounds_test.b
+Description: Tests right array bounds checking
+Expected Output: A series of '+' characters
+Expected Behavior: Should output a number of '+' characters equal to MAX_MEMORY-1 if bounds checking is working
+
+5. obscure_problems_test.b
+Description: Tests various edge cases and obscure problems
+Expected Output: H
+Expected Behavior: Should output a single 'H' character
+
+6. unmatched_bracket1_test.b
+Description: Tests handling of unmatched opening bracket
+Expected Output: (none)
+Expected Behavior: Should throw a runtime error about unmatched bracket
+
+7. unmatched_bracket2_test.b
+Description: Tests handling of unmatched closing bracket
+Expected Output: (none)
+Expected Behavior: Should throw a runtime error about unmatched bracket 
