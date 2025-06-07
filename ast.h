@@ -14,6 +14,8 @@ class AST;
 // State struct to hold the program's state
 struct State {
     int memory[MAX_MEMORY];
+    std::vector<int> inputs;  // Store inputs given to the program
+    std::vector<int> outputs; // Store outputs produced by the program
     size_t pointer;
 
     State() : pointer(0) {

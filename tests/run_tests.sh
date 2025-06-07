@@ -20,7 +20,6 @@ run_test() {
         printf "\x04" >> temp_input.txt
         # Run the test with the input file
         output=$(../brainfuck "$test_file" < temp_input.txt 2>&1)
-        rm temp_input.txt
         # Check if the output matches the expected pattern
         if [[ $(echo "$output" | wc -l) -eq 2 ]] && \
            [[ $(echo "$output" | head -n1) == $(echo "$output" | tail -n1) ]] && \

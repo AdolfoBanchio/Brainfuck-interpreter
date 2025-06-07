@@ -9,7 +9,7 @@ Brainfuck-like syntax with basic constructs.
 #include <vector>
 #include "ast.h"
 
-
+// ⟨ > , σ ⟩ → σ' donde σ' es σ con el puntero incrementado en 1 (si no excede el límite).
 void MoveRight::execute(State& state) {
     // check out of bounds, if so terminate excution
     if (state.pointer < MAX_MEMORY - 1) {
@@ -19,6 +19,7 @@ void MoveRight::execute(State& state) {
     }
 }
 
+// ⟨ < , σ ⟩ → σ' donde σ' es σ con el puntero decrementado en 1 (si no es menor a 0).
 void MoveLeft::execute(State& state) {
     // check out of bounds, if so terminate excution
     if (state.pointer > 0) {
@@ -28,27 +29,33 @@ void MoveLeft::execute(State& state) {
     }
 }
 
+// ⟨ + , σ ⟩ → σ' donde σ' es σ con el valor de la celda apuntada incrementado en 1 (si no excede el límite).
 void Increment::execute(State& state) {
     // Increment the current memory cell, wrap around if necessary
     state.memory[state.pointer] = (state.memory[state.pointer] + 1) % 256;
 }
 
+// ⟨ - , σ ⟩ → σ' donde σ' es σ con el valor de la celda apuntada decrementado en 1 (si no excede el límite).
 void Decrement::execute(State& state) {
     // Decrement the current memory cell, wrap around if necessary
     state.memory[state.pointer] = (state.memory[state.pointer] - 1 + 256) % 256;
 }
 
+// ⟨ . , σ ⟩ → σ con efecto secundario de imprimir el valor de la celda actual como carácter.
 void Output::execute(State& state) {
     // If the value is 10, output a newline, otherwise output the character
     if (state.memory[state.pointer] == 10) {
         std::cout << '\n';
+        state.outputs.push_back(10);
     } else {
         std::cout << static_cast<char>(state.memory[state.pointer]);
+        state.outputs.push_back(state.memory[state.pointer]);
     }
     // Flush the output to ensure immediate display
     std::cout.flush();
 }
 
+// ⟨ , σ ⟩ → σ' donde σ' es σ con el valor de la celda apuntada reemplazado por el valor de la entrada.
 void Input::execute(State& state) {
     // Read a single character from input
     int c = std::cin.get();
@@ -57,9 +64,11 @@ void Input::execute(State& state) {
     if (c != EOF) {
         // If it's a newline, store 10, otherwise store the character
         state.memory[state.pointer] = (c == '\n') ? 10 : c;
+        state.inputs.push_back(c);
     }
 }
 
+// ⟨ [ body ] , σ ⟩ → σ' si valor actual ≠ 0, ejecutando cuerpo recursivamente hasta que sea 0.
 void Loop::execute(State& state) {
     while (state.memory[state.pointer] != 0) {
         for (auto& cmd : body) {
@@ -68,6 +77,7 @@ void Loop::execute(State& state) {
     }
 }
 
+// AST class implementation
 void AST::addExpr(std::unique_ptr<Expr> expr) {
     exprs.push_back(std::move(expr));
 }
@@ -78,17 +88,6 @@ void AST::execute(State& state) {
         expr->execute(state);
     }
 }
-
-Program::Program(AST&& ast) : ast(std::move(ast)) {
-    // Initialize the program state
-    state = State();
-}
-
-void Program::run() {
-    // Execute the AST with the current state
-    ast.execute(state);
-}
-
 
 std::vector<std::unique_ptr<Expr>> parseLoopBody(const std::string& code, size_t& pos) {
     std::vector<std::unique_ptr<Expr>> result;
@@ -142,3 +141,15 @@ AST parse(const std::string& code) {
 
     return ast;
 }
+
+// Program class implementation
+Program::Program(AST&& ast) : ast(std::move(ast)) {
+    // Initialize the program state
+    state = State();
+}
+
+void Program::run() {
+    // Execute the AST with the current state
+    ast.execute(state);
+}
+
