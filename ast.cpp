@@ -39,14 +39,25 @@ void Decrement::execute(State& state) {
 }
 
 void Output::execute(State& state) {
-    // Output the current memory cell as a character
-    std::cout << static_cast<char>(state.memory[state.pointer]);
+    // If the value is 10, output a newline, otherwise output the character
+    if (state.memory[state.pointer] == 10) {
+        std::cout << '\n';
+    } else {
+        std::cout << static_cast<char>(state.memory[state.pointer]);
+    }
+    // Flush the output to ensure immediate display
+    std::cout.flush();
 }
 
 void Input::execute(State& state) {
-    // Input a value into the current memory cell (for simplicity, just set it to 0)
-    std::cout << "Input value for memory cell " << state.pointer << ": ";
-    std::cin >> state.memory[state.pointer];
+    // Read a single character from input
+    int c = std::cin.get();
+    
+    // Handle EOF
+    if (c != EOF) {
+        // If it's a newline, store 10, otherwise store the character
+        state.memory[state.pointer] = (c == '\n') ? 10 : c;
+    }
 }
 
 void Loop::execute(State& state) {

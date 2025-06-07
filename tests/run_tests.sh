@@ -15,11 +15,33 @@ run_test() {
     
     # Special handling for IO test
     if [[ "$test_name" == "io_test" ]]; then
-        # Create a temporary file with a newline and EOF
+        # Create a temporary file with just a newline
         echo -e "\n" > temp_input.txt
+        printf "\x04" >> temp_input.txt
         # Run the test with the input file
         output=$(../brainfuck "$test_file" < temp_input.txt 2>&1)
         rm temp_input.txt
+        # Check if the output matches the expected pattern
+        if [[ $(echo "$output" | wc -l) -eq 2 ]] && \
+           [[ $(echo "$output" | head -n1) == $(echo "$output" | tail -n1) ]] && \
+           [[ $(echo "$output" | head -n1) =~ ^[A-Z]{2}$ ]]; then
+            # Check if the output indicates proper newline handling (no 'O' in output)
+            if [[ $(echo "$output" | head -n1) != *"O"* ]]; then
+                echo -e "${GREEN}✓ Test passed: $test_name${NC}"
+                echo "Output indicates: $(echo "$output" | head -n1)"
+                return 0
+            else
+                echo -e "${RED}✗ Test failed: $test_name${NC}"
+                echo "Newline handling incorrect (output contains 'O')"
+                echo "Got: $output"
+                return 1
+            fi
+        else
+            echo -e "${RED}✗ Test failed: $test_name${NC}"
+            echo "Expected: Two identical lines of two uppercase letters"
+            echo "Got: $output"
+            return 1
+        fi
     else
         # Run the test normally
         output=$(../brainfuck "$test_file" 2>&1)
