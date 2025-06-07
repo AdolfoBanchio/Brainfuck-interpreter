@@ -4,7 +4,7 @@
 
 Este proyecto implementa un **intérprete del lenguaje Brainfuck**, un lenguaje esotérico minimalista compuesto por solo ocho comandos. A pesar de su simplicidad, Brainfuck es turing completo, lo que lo convierte en un excelente caso de estudio para explorar la implementación de un lenguaje formal desde su gramática hasta su semántica operacional.
 
-Un programa de Brainfuck tiene a dispocicion un puntero movible para manipular un arreglo o "cinta de memoria" de al menos 30.000 celdas. Cada celda contiene un valor entero (de usualmente un byte), tal que su valor inicial es 0 y el puntero comienza en la celda mas a la izquierda.
+Un programa de Brainfuck tiene a disposición un puntero movible para manipular un arreglo o "cinta de memoria" de al menos 30.000 celdas. Cada celda contiene un valor entero (de usualmente un byte), tal que su valor inicial es 0 y el puntero comienza en la celda más a la izquierda.
 
 ### Comandos del lenguaje
 
@@ -57,7 +57,7 @@ El estado del programa (`ProgramState`) consiste en:
 - Un vector de celdas de memoria (`std::vector<uint8_t>`).
 - Un puntero de posición actual.
 - Pila que contiene todos los inputs dados al programa
-- Pila que contiene todos los outpus dados por el programa
+- Pila que contiene todos los outputs dados por el programa
 
 ### Semántica operacional
 
